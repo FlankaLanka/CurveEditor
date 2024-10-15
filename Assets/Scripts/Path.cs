@@ -65,6 +65,20 @@ public class Path
 
         }
     }
+    public bool IsClosed
+    {
+        get
+        {
+            return isClosed;
+        }
+    }
+
+    public Vector2[] CalculateEvenlySpacedPoints(float spacing, float resolution = 1)
+    {
+        List<Vector2> evenlySpacedPoints = new List<Vector2>();
+        evenlySpacedPoints.Add(points[0]);
+        return null;
+    }
 
     public void AddSegment(Vector2 anchorPos)
     {

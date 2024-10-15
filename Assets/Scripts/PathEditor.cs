@@ -55,8 +55,16 @@ public class PathEditor : Editor
 
         if(guiEvent.type == EventType.MouseDown && guiEvent.button == 0 && guiEvent.shift)
         {
-            Undo.RecordObject(creator, "Add Segment");
-            path.AddSegment(mousePos);
+            if(selectedSegmentIndex != -1)
+            {
+                Undo.RecordObject(creator, "Split Segment");
+                path.SplitSegment(mousePos, selectedSegmentIndex);
+            }
+            else if (!path.IsClosed)
+            {
+                Undo.RecordObject(creator, "Add Segment");
+                path.AddSegment(mousePos);
+            }
         }
 
         //find the closest point to delete
@@ -82,26 +90,53 @@ public class PathEditor : Editor
             }
         }
 
-        
+
+        if(guiEvent.type == EventType.MouseMove && guiEvent.shift)
+        {
+            //find closest position to insert
+            float minDistToSegment = segmentSelectThreshold;
+            int newSelectedSegmentIndex = -1;
+
+            for (int i = 0; i < path.NumSegments; i++)
+            {
+                Vector2[] points = path.GetPointsInSegment(i);
+                float cur_dist = HandleUtility.DistancePointBezier(mousePos, points[0], points[3], points[1], points[2]);
+
+                if (cur_dist < minDistToSegment)
+                {
+                    minDistToSegment = cur_dist;
+                    newSelectedSegmentIndex = i;
+                }
+
+                if (newSelectedSegmentIndex != selectedSegmentIndex)
+                {
+                    selectedSegmentIndex = newSelectedSegmentIndex;
+                    HandleUtility.Repaint();
+                }
+            }
+        }
+
     }
 
     private void Draw()
     {
-        Handles.color = Color.white;
+        
         for (int i = 0; i < path.NumSegments; i++)
         {
             Vector2[] points = path.GetPointsInSegment(i);
+            Handles.color = creator.handleColor;
             Handles.DrawLine(points[1], points[0]);
             Handles.DrawLine(points[2], points[3]);
-            Handles.DrawBezier(points[0], points[3], points[1], points[2], Color.magenta, null, 1.0f);
+            Color segmentColor = (i == selectedSegmentIndex && Event.current.shift) ? creator.selectedSegmentColor : creator.segmentColor;
+            Handles.DrawBezier(points[0], points[3], points[1], points[2], segmentColor, null, 1.0f);
         }
 
         for(int i = 0; i < path.NumPoints; i++)
         {
-            if(i % 3 == 0)
-                Handles.color = Color.cyan;
+            if (i % 3 == 0)
+                Handles.color = creator.anchorColor;
             else
-                Handles.color = Color.yellow;
+                Handles.color = creator.controlColor;
 
             Vector2 newPos = Handles.FreeMoveHandle(path[i], Quaternion.identity, 0.1f, Vector2.zero, Handles.CylinderHandleCap);
             if (path[i] != newPos)

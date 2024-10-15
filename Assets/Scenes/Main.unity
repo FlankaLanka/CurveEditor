@@ -132,6 +132,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 415136674}
+  - component: {fileID: 415136675}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -154,6 +155,43 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &415136675
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 415136672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb701c2eed64a4fe78584b6232678542, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  path:
+    points:
+    - {x: -2.1336432, y: 1.8020071}
+    - {x: -1.6336432, y: 2.3020072}
+    - {x: -0.63364315, y: 1.3020071}
+    - {x: -0.13364315, y: 1.8020071}
+    - {x: 0.36635685, y: 2.3020072}
+    - {x: 0.79847467, y: 0.22132134}
+    - {x: 1.5267307, y: 0.79081213}
+    - {x: 1.5497974, y: 0.8088501}
+    - {x: 2.47257, y: 2.124085}
+    - {x: 2.3258486, y: 1.955791}
+    - {x: 2.1791272, y: 1.787497}
+    - {x: 2.004297, y: 3.108427}
+    - {x: 1.8251964, y: 3.130398}
+    - {x: 1.4613036, y: 3.1750386}
+    - {x: 0.44725204, y: 3.0655067}
+    - {x: 0.0055185556, y: 3.265189}
+    isClosed: 0
+    autoSetControlPoints: 0
+  anchorColor: {r: 1, g: 0, b: 0, a: 1}
+  controlColor: {r: 1, g: 1, b: 1, a: 1}
+  handleColor: {r: 0, g: 1, b: 0, a: 1}
+  segmentColor: {r: 1, g: 0, b: 1, a: 1}
+  selectedSegmentColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
