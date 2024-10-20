@@ -75,9 +75,52 @@ public class Path
 
     public Vector2[] CalculateEvenlySpacedPoints(float spacing, float resolution = 1)
     {
+        if (resolution <= 0)
+            return null;
+        spacing = Mathf.Abs(spacing);
+
+        //get curve samples
+        List<Vector2> curvePoints = new List<Vector2>();
+        for (int segmentIndex = 0; segmentIndex < NumSegments; segmentIndex++)
+        {
+            Vector2[] p = GetPointsInSegment(segmentIndex);
+            float controlNetLength = Vector2.Distance(p[0], p[1]) + Vector2.Distance(p[1], p[2]) + Vector2.Distance(p[2], p[3]);
+            float estimatedCurveLength = Vector2.Distance(p[0], p[3]) + controlNetLength / 2f;
+            int divisions = Mathf.CeilToInt(estimatedCurveLength * resolution * 10);
+            float t = 0;
+
+            for (int i = 0; i <= divisions; i++)
+            {
+                Vector2 pointOnCurve = Bezier.CubicLerp(p[0], p[1], p[2], p[3], t);
+                curvePoints.Add(pointOnCurve);
+                t += 1f / divisions;
+            }
+        }
+
+        //fill points in
         List<Vector2> evenlySpacedPoints = new List<Vector2>();
-        evenlySpacedPoints.Add(points[0]);
-        return null;
+        evenlySpacedPoints.Add(curvePoints[0]);
+        Vector2 previousPoint = curvePoints[0];
+        float distSinceLastEvenPoint = 0;
+
+        for (int i = 1; i < curvePoints.Count; i++)
+        {
+            Vector2 currentPoint = curvePoints[i];
+            distSinceLastEvenPoint += Vector2.Distance(previousPoint, currentPoint);
+
+            while (distSinceLastEvenPoint >= spacing)
+            {
+                float overshootDist = distSinceLastEvenPoint - spacing;
+                Vector2 newEvenlySpacedPoint = currentPoint + (previousPoint - currentPoint).normalized * overshootDist;
+                evenlySpacedPoints.Add(newEvenlySpacedPoint);
+                distSinceLastEvenPoint = overshootDist;
+                previousPoint = newEvenlySpacedPoint;
+            }
+
+            previousPoint = currentPoint;
+        }
+
+        return evenlySpacedPoints.ToArray();
     }
 
     public void AddSegment(Vector2 anchorPos)
