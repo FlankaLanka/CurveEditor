@@ -99,6 +99,10 @@ public class Path
 
         //fill points in
         List<Vector2> evenlySpacedPoints = new List<Vector2>();
+
+        if (curvePoints.Count == 0)
+            return evenlySpacedPoints.ToArray();
+
         evenlySpacedPoints.Add(curvePoints[0]);
         Vector2 previousPoint = curvePoints[0];
         float distSinceLastEvenPoint = 0;
